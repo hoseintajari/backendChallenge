@@ -48,6 +48,6 @@ func DailyTransactionTotal() {
 	for {
 		s := time.Now()
 		t.Calculate(s)
-		time.Sleep(1 * time.Minute)
+		time.Sleep(24 * time.Hour)
 	}
 }

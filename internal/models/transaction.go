@@ -2,7 +2,6 @@ package models
 
 import (
 	"AecProject/internal/controller/apimodels"
-	"fmt"
 	"gorm.io/gorm"
 	"log"
 	"math/rand"
@@ -34,10 +33,9 @@ func (t *Transaction) Add(request apimodels.AddMoneyRequest) int {
 
 func (t *Transaction) Calculate(duration time.Time) {
 	var total float64
-	err := db.Table("transactions").Select("COALESCE(SUM(amount), 0) as total").Where("created_at >= ?", duration).Row().Scan(&total)
-	if err != nil {
+	if err := db.Model(&Transaction{}).Select("COALESCE(SUM(amount), 0) as total").Where("created_at >= ?", duration).Scan(&total).Error; err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Total transactions in last 24 hours: %.2f\n", total)
+	log.Println("Total transactions in last 24 hours:", total)
 }
